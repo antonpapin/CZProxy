@@ -1,0 +1,32 @@
+@model CZProxy.Models.EventsResponse
+
+@{
+    ViewBag.Title = "Community-Z events";
+    Layout = "_Layout";
+}
+
+<h2>@(Model.ErrorMessage ?? ViewBag.Title)</h2>
+
+@if (string.IsNullOrEmpty(Model.ErrorMessage))
+{
+@foreach (var item in Model.Events)
+{
+    <div>
+        @Html.RouteLink(item.Title, new {}, new { href = "https://community-z.com/events/" + item.Url })
+        <hr/>
+    </div>
+}
+}
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<input type="button"
+       @prevDisabled
+       value="Previous"
+       onclick="location.href='@Url.Action("Index", "Events", new { pageNumber = Model.Start - Model.Limit })'" />
+<input type="button"
+       @nextDisabled
+       value="Next"
+       onclick="location.href='@Url.Action("Index", "Events", new { pageNumber = Model.Start + Model.Limit })'" />
